@@ -1,0 +1,36 @@
+services:
+  backend:
+    build: ./BackEnd
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/diary_rheina
+    depends_on:
+      - mongo
+    volumes:
+      - ./BackEnd/uploads:/app/uploads
+      - ./BackEnd:/app
+      - /app/node_modules
+
+  frontend:
+    build: ./FrontEnd
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:5000
+    depends_on:
+      - backend
+    volumes:
+      - ./FrontEnd:/app
+      - /app/node_modules
+      - ./BackEnd/uploads:/app/uploads
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
