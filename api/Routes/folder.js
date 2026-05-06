@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Folder = require('../models/Folder');
+const Folder = require('../Models/Folder');
 const jwt = require('jsonwebtoken');
 
 // Middleware to check auth
@@ -65,7 +65,7 @@ router.delete('/:id', auth, async (req, res) => {
         console.log(`Backend: Deleting folder ${req.params.id} for user ${req.user.id}`);
         
         // 1. Unlink diaries from this folder (make them orphans)
-        const Diary = require('../models/Diary');
+        const Diary = require('../Models/Diary');
         const updateResult = await Diary.updateMany(
             { folderId: req.params.id, userId: req.user.id },
             { $unset: { folderId: "" } }

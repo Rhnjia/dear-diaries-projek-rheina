@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Diary = require('../models/Diary');
+const Diary = require('../Models/Diary');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
