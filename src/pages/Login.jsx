@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import { Lock, Mail, User, Shield, PenLine } from 'lucide-react';
+import { Lock, Mail, BookOpen } from 'lucide-react';
+import API_URL from '../config';
 
-export default function Register() {
-    const [form, setForm] = useState({ username: '', email: '', password: '', pin: '' });
+export default function Login() {
+    const [form, setForm] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
@@ -14,9 +15,11 @@ export default function Register() {
         e.preventDefault();
         setLoading(true);
         try {
-            await axios.post('http://localhost:5000/api/auth/register', form);
-            setSuccess('Akun berhasil dibuat! Mengalihkan...');
-            setTimeout(() => navigate('/login'), 1500);
+            const res = await axios.post(`${API_URL}/auth/login`, form);
+            localStorage.setItem('token', res.data.token);
+            localStorage.setItem('user', JSON.stringify(res.data.user));
+            setSuccess('Login berhasil! Membuka diary...');
+            setTimeout(() => navigate('/dashboard'), 1500);
         } catch (err) {
             setError(err.response?.data || err.message);
             setTimeout(() => setError(''), 3000);
@@ -46,28 +49,13 @@ export default function Register() {
                             className="w-24 h-24 mx-auto mb-3 object-contain drop-shadow-md" 
                         />
                         <h2 className="text-4xl font-black bg-gradient-to-r from-pink-500 to-cyan-500 bg-clip-text text-transparent pb-2 leading-relaxed">
-                            Daftar Dear Diary
+                            Masuk Dear Diary
                         </h2>
                     </div>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text font-bold text-lg flex items-center gap-2 text-gray-700">
-                                    <User size={20} strokeWidth={2.5} className="text-pink-500" />
-                                    Username
-                                </span>
-                            </label>
-                            <input
-                                type="text"
-                                placeholder="Masukkan username"
-                                className="input w-full input-lg font-semibold border-2 border-pink-200 focus:border-cyan-400 bg-white text-gray-800 placeholder:text-gray-400 focus:outline-none"
-                                required
-                                onChange={e => setForm({ ...form, username: e.target.value })}
-                            />
-                        </div>
-                        <div className="form-control">
-                            <label className="label">
-                                <span className="label-text font-black text-lg flex items-center gap-2 text-gray-800">
                                     <Mail size={20} strokeWidth={2.5} className="text-pink-500" />
                                     Email
                                 </span>
@@ -95,34 +83,18 @@ export default function Register() {
                                 onChange={e => setForm({ ...form, password: e.target.value })}
                             />
                         </div>
-                        <div className="form-control">
-                            <label className="label">
-                                <span className="label-text font-black text-lg flex items-center gap-2 text-gray-800">
-                                    <Shield size={20} strokeWidth={2.5} className="text-pink-500" />
-                                    PIN Keamanan
-                                </span>
-                            </label>
-                            <input
-                                type="text"
-                                placeholder="6 digit PIN"
-                                maxLength="6"
-                                className="input w-full input-lg font-semibold border-2 border-pink-200 focus:border-cyan-400 bg-white text-gray-800 placeholder:text-gray-400 focus:outline-none text-center tracking-widest"
-                                required
-                                onChange={e => setForm({ ...form, pin: e.target.value })}
-                            />
-                        </div>
                         <button 
                             type="submit" 
                             className="btn w-full btn-lg font-black text-lg gap-2 shadow-lg hover:shadow-xl bg-pink-500 hover:bg-pink-600 border-none text-white"
                             disabled={loading}
                         >
-                            {loading ? <span className="loading loading-spinner"></span> : <PenLine size={24} strokeWidth={2.5} />}
-                            Mulai Menulis
+                            {loading ? <span className="loading loading-spinner"></span> : <BookOpen size={24} strokeWidth={2.5} />}
+                            Buka Diary
                         </button>
                     </form>
                     <div className="divider font-bold text-gray-400">ATAU</div>
                     <p className="text-center font-bold text-lg text-gray-600">
-                        Sudah punya akun? <Link to="/login" className="text-cyan-500 hover:text-cyan-600 font-black">Masuk</Link>
+                        Belum punya akun? <Link to="/register" className="text-cyan-500 hover:text-cyan-600 font-black">Daftar</Link>
                     </p>
                 </div>
             </div>

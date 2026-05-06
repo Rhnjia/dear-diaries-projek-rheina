@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Trash2, Edit, Plus, LogOut, BookOpen, PenLine, Calendar, Music, Headphones, Check, X, Folder, Lock, ShieldCheck, Gamepad2 } from 'lucide-react';
 import GameCenter from '../components/GameCenter';
+import { API_URL, BASE_URL } from '../config';
 
 export default function Dashboard() {
     const [folders, setFolders] = useState([]);
